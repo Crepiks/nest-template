@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppEnvironment, getAppConfig } from './config/app.config';
-import { getDatabaseConfig } from './config/database.config';
-import { daos } from './common/dao';
+import { AppEnvironment, getAppConfig } from 'src/config/app.config';
+import { getDatabaseConfig } from 'src/config/database.config';
+import { daos } from 'src/common/dao';
+import { Seeder } from './seeder';
+import { UsersSeeder } from './modules/users/users.seeder';
 
 const appConfig = getAppConfig();
 const databaseConfig = getDatabaseConfig();
@@ -28,6 +30,8 @@ const databaseConfig = getDatabaseConfig();
       ssl: appConfig.environment !== AppEnvironment.Local,
       synchronize: false,
     }),
+    TypeOrmModule.forFeature(daos),
   ],
+  providers: [Seeder, UsersSeeder],
 })
-export class AppModule {}
+export class SeederModule {}
